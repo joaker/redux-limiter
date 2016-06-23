@@ -23,6 +23,19 @@ Contribute to the package:
 
 $ git clone https://github.com/joaker/redux-limiter.git
 
+Create a local npm package using
+
+$ npm pack
+
+$ cd examples/tree-view
+
+Install example dependencies
+$ npm install
+
+$ npm install ../../redux-limiter-x.x.x.tgz
+
+TODO: consume or demonstrate the use of redux-limiter
+
 <!-- ## Tests
 
 TODO: npm test -->
