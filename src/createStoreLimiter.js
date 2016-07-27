@@ -36,15 +36,24 @@ export var ActionTypes = {
  * @returns {Store} A Redux store that lets you read the state, dispatch actions
  * and subscribe to changes.
  */
-export default function createStoreLimiter(store, blinkPerBroadcast = 8) {
+export default function createStoreLimiter(store, initialBlinkPerBroadcast = 8) {
   if (typeof store === 'undefined') {
     throw new Error('The store provided to createStoreLimiter was undefined.  An underlying store is required.')
   }
 
   var underlyingStore = store;
-  var currentListeners = []
-  var nextListeners = currentListeners
-  var isDispatching = false
+  var currentListeners = [];
+  var nextListeners = currentListeners;
+  var isDispatching = false;
+
+  let blinkPerBroadcast = initialBlinkPerBroadcast;
+  function setRate(newRate){
+    blinkPerBroadcast = newRate;
+  }
+
+  function getRate(){
+    return blinkPerBroadcast;
+  }
 
   function ensureCanMutateNextListeners() {
     if (nextListeners === currentListeners) {
@@ -111,19 +120,20 @@ export default function createStoreLimiter(store, blinkPerBroadcast = 8) {
   let updateRequestCount = 0;
   let updatesCompletedCount = 0;
 
+  // Set the flag that indicates if an update is required to 'true'
   const flagUpdateRequested = () => {
     updateRequestCount += 1;
     needUpdate = 'update requested';
   }
 
+  // Clear the flag that indicates if an update is required
   const flagUpdateComplete = () => {
     updatesCompletedCount += 1;
     needUpdate = false;
-    // console.log('<requests,broadcasts>:<'+updateRequestCount+','+updatesCompletedCount+'>');
   };
 
   /**
-   * Broadcast an update to all listeners
+   * Broadcast - notify all registered listeners that this has changed
    */
   function broadcast(){
     var listeners = currentListeners = nextListeners
@@ -173,18 +183,9 @@ export default function createStoreLimiter(store, blinkPerBroadcast = 8) {
   }
 
   /**
-   * Dispatches an action. It is the only way to trigger a state change.
+   * Dispatches an action to the underlying store. It is the only way to trigger a state change
    *
-   * The `reducer` function, used to create the store, will be called with the
-   * current state tree and the given `action`. Its return value will
-   * be considered the **next** state of the tree, and the change listeners
-   * will be notified.
-   *
-   * The base implementation only supports plain object actions. If you want to
-   * dispatch a Promise, an Observable, a thunk, or something else, you need to
-   * wrap your store creating function into the corresponding middleware. For
-   * example, see the documentation for the `redux-thunk` package. Even the
-   * middleware will eventually dispatch plain object actions using this method.
+   * Notifications from the underlying store will issue and update request that is throttled to the throttling rate
    *
    * @param {Object} action A plain object representing “what changed”. It is
    * a good idea to keep actions serializable so you can record and replay user
@@ -280,6 +281,8 @@ export default function createStoreLimiter(store, blinkPerBroadcast = 8) {
     subscribe,
     getState,
     replaceReducer,
-    [$$observable]: observable
+    [$$observable]: observable,
+    setRate,
+    getRate,
   }
 }
