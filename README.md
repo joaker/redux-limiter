@@ -23,8 +23,8 @@ Contribute to the package:
 
 $ git clone https://github.com/joaker/redux-limiter.git
 
-## Modules
-
+## Usage
+```
 import {createStore} from 'redux';
 import limitStore from 'redux-limiter';
 import {Provider} from 'react-redux';
@@ -54,7 +54,7 @@ return (
     <App/>
   </Provider>
 );
-
+```
 <!-- ## Tests
 
 TODO: npm test -->
