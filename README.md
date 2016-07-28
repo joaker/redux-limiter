@@ -24,7 +24,7 @@ Contribute to the package:
 $ git clone https://github.com/joaker/redux-limiter.git
 
 ## Usage
-```
+```es2015
 import {createStore} from 'redux';
 import limitStore from 'redux-limiter';
 import {Provider} from 'react-redux';
