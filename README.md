@@ -34,7 +34,7 @@ import App from 'components/App'; // or whatever your base component is
 const reducer = (state = 1, action) => {
   switch (action.type) {
     case 'NEXT':
-      return state.iteration + 1;
+      return state + 1;
   }
   return state;
 }
