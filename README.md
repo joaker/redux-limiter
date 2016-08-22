@@ -55,6 +55,11 @@ return (
   </Provider>
 );
 ```
+
+## Benchmark
+
+The [benchmark project](http://github.com/joaker/limiter-test) provides a simple sample application for demonstrating performance at different limiting rates
+
 <!-- ## Tests
 
 TODO: npm test -->
