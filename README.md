@@ -48,7 +48,7 @@ const throttleRate = 2;
 // limit the store with react-limiter
 const store = limitStore(baseStore, throttleRate);
 
-//
+// register the store with your provider
 return (
   <Provider store={store}>
     <App/>
@@ -72,4 +72,4 @@ Jack Ofnotrade
 
 ## License
 
-Have fun
+MIT
