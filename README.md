@@ -13,6 +13,10 @@ Boost the throughput of actions through redux by ignoring render requests unnece
 
 This module is appropriate if you are using [stateless components](http://tylermcginnis.com/functional-components-vs-stateless-functional-components-vs-stateless-components/).  Since the object of this module is to skip update frames, you want to use it with components that are dependent only on components that are dependent on redux state alone
 
+## Demo
+
+See redux-limiter in action by clicking "Optimize" in this [seating optimizer](https://immense-lake-53069.herokuapp.com/#/Venue?_k=fsv0q2).
+
 ## Installation
 
 Install the package:
