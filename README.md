@@ -1,75 +1,79 @@
 ## Synopsis
-Limit the rate at which redux published change notifications
 
-For each [action published to redux](http://redux.js.org/docs/basics/Actions.html), redux will attempt to push a change notification that will initiate a document rendering.  Since the human eye perceives 60 frames per second as being contiguous motion, initiating renderings more frequently than that is superfluous.  Time spent on superfluous renderings could be better spent elsewhere, such as processing more actions
+Throttle Redux selector re-renders to animation frame rate via a React hook.
 
-redux-limiter throttles the rate of change notification.  Applications which mutate state more frequently than they need UI updates can receive significant performance boosts
+Every Redux dispatch triggers a potential re-render. When actions arrive faster than the display can refresh (~60fps), components re-render more often than they need to. `redux-limiter` solves this with `useThrottledSelector` — a drop-in alternative to `useSelector` that coalesces rapid store updates into at most one re-render per animation frame.
 
 ## Motivation
 
-Boost the throughput of actions through redux by ignoring render requests unnecessary for appearance of continuity
+Boost the throughput of actions through Redux by skipping render requests that are invisible to the human eye.
 
-## Caveat Codor
+## Caveat
 
-This module is appropriate if you are using [stateless components](http://tylermcginnis.com/functional-components-vs-stateless-functional-components-vs-stateless-components/).  Since the object of this module is to skip update frames, you want to use it with components that are dependent only on components that are dependent on redux state alone
+This hook is appropriate for components whose props derive entirely from Redux state. Since intermediate frames are intentionally skipped, any component with non-Redux local state that must stay in sync per-dispatch should continue using `useSelector`.
 
 ## Installation
 
-Install the package:
-
-$ npm install redux-limiter
-
-Contribute to the package:
-
-$ git clone https://github.com/joaker/redux-limiter.git
+```
+npm install redux-limiter
+```
 
 ## Usage
-```js
-import {createStore} from 'redux';
-import limitStore from 'redux-limiter';
-import {Provider} from 'react-redux';
-import App from 'components/App'; // or whatever your base component is
 
-// create a reducer
-const reducer = (state = 1, action) => {
-  switch (action.type) {
-    case 'NEXT':
-      return state + 1;
-  }
-  return state;
+```tsx
+import { useThrottledSelector } from 'redux-limiter';
+
+function Counter() {
+  // Re-renders at most once per animation frame (~60fps),
+  // even if the store is updated hundreds of times per second.
+  const count = useThrottledSelector((state: RootState) => state.counter.count);
+  return <div>{count}</div>;
 }
+```
 
-// create a base store
-const baseStore = createStore(reducer, defaultState);
+No store wrapping required. Swap `useSelector` for `useThrottledSelector` in the components where you want throttled updates.
 
-// choose a rate to for throttle updates (rate >= 1; default rate is 1)
-const throttleRate = 2;
+## API
 
-// limit the store with react-limiter
+```ts
+useThrottledSelector<TSelected>(
+  selector: (state: any) => TSelected,
+  equalityFn?: (prev: TSelected, next: TSelected) => boolean,
+  maxFps?: number
+): TSelected
+```
+
+| Parameter    | Default        | Description                                                                                          |
+|--------------|----------------|------------------------------------------------------------------------------------------------------|
+| `selector`   | required       | Selector function, same as `useSelector`                                                             |
+| `equalityFn` | `Object.is`    | Controls whether a new selector result triggers a re-render                                          |
+| `maxFps`     | device refresh | Cap updates to at most this many times per second (e.g. `30` for 30fps instead of the default 60fps) |
+
+## Migrating from v1
+
+v1 wrapped the Redux store globally:
+
+```js
 const store = limitStore(baseStore, throttleRate);
 
-// register the store with your provider
-return (
-  <Provider store={store}>
-    <App/>
-  </Provider>
-);
+<Provider store={store}>
+  <App />
+</Provider>
+```
+
+v2 works at the component level — no store wrapping needed:
+
+```tsx
+// Before (v1 + useSelector)
+const value = useSelector((state: RootState) => state.value);
+
+// After (v2)
+const value = useThrottledSelector((state: RootState) => state.value);
 ```
 
 ## Benchmark
 
-The [benchmark project](http://github.com/joaker/limiter-test) provides a simple sample application for demonstrating performance at different limiting rates
-
-<!-- ## Tests
-
-TODO: npm test -->
-
-## Modules
-react, redux, react-router
-socketio, webpack/express
-css-modules
-
-<!-- mongodb -->
+The [benchmark project](http://github.com/joaker/limiter-test) provides a sample application for demonstrating performance at different throttle rates.
 
 ## Contributors
 

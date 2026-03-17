@@ -1,0 +1,1 @@
+export { useThrottledSelector } from './useThrottledSelector';
