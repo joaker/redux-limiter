@@ -1,7 +1,7 @@
 {
   "name": "redux-limiter",
   "version": "1.5.0",
-  "description": "A module for throttling the rate of i",
+  "description": "A module for throttling the rate of Redux change notifications to avoid superfluous re-renders",
   "main": "lib/index.js",
   "scripts": {
     "start": "babel-node index.js",
@@ -11,18 +11,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "seating.git"
+    "url": "https://github.com/joaker/redux-limiter.git"
   },
   "engines": {
     "node": ">=0.12.7"
   },
   "keywords": [
     "react",
-    "webpack",
-    "seating"
+    "redux",
+    "throttle",
+    "performance",
+    "render"
   ],
   "author": "Jack Ofnotrade",
-  "license": "ISC",
+  "license": "MIT",
   "babel": {
     "presets": [
       "es2015",
@@ -33,27 +35,29 @@
     "lib",
     "src"
   ],
+  "dependencies": {
+    "lodash": "^4.0.0",
+    "symbol-observable": "^1.0.0"
+  },
+  "peerDependencies": {
+    "react": ">=0.14.0",
+    "react-redux": ">=4.0.0",
+    "redux": ">=3.0.0"
+  },
   "devDependencies": {
+    "babel-cli": "^6.5.1",
     "babel-core": "^6.10.4",
+    "babel-loader": "^6.2.1",
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-react": "^6.5.0",
     "babel-preset-react-hmre": "^1.1.1",
     "babel-preset-stage-0": "^6.5.0",
-    "loaders.css": "^0.1.2"
-  },
-  "dependencies": {
-    "babel-cli": "^6.5.1",
-    "babel-core": "^6.4.5",
-    "babel-loader": "^6.2.1",
-    "babel-preset-es2015": "^6.3.13",
-    "babel-preset-react": "^6.3.13",
     "chai": "^3.4.1",
     "chai-immutable": "^1.5.3",
     "classnames": "^2.2.3",
     "connect": "^3.4.1",
     "css-loader": "^0.23.1",
     "file-loader": "^0.8.5",
-    "fs": "0.0.2",
     "history": "^2.0.0",
     "immutable": "^3.7.6",
     "jsdom": "^7.2.2",
@@ -71,7 +75,6 @@
     "react-redux": "^4.1.1",
     "react-router": "^2.0.0-rc6",
     "redux": "^3.3.1",
-    "redux-limiter": "*",
     "resolve-url-loader": "^1.4.3",
     "rimraf": "^2.5.2",
     "sass-loader": "^3.1.2",
