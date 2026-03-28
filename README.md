@@ -12,6 +12,10 @@ Boost the throughput of actions through Redux by skipping render requests that a
 
 This hook is appropriate for components whose props derive entirely from Redux state. Since intermediate frames are intentionally skipped, any component with non-Redux local state that must stay in sync per-dispatch should continue using `useSelector`.
 
+## Demo
+
+See redux-limiter in action by clicking "Optimize" in this [seating optimizer](https://immense-lake-53069.herokuapp.com/#/Venue?_k=fsv0q2).
+
 ## Installation
 
 ```
